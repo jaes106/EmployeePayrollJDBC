@@ -2,7 +2,7 @@ package com.java.bridgelabz;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.Statement;
+import java.sql.PreparedStatement;
 
 public class EmployeePayrollService {
 
@@ -13,20 +13,22 @@ public class EmployeePayrollService {
         String password = "jaes";
 
         try {
-
             Connection connection =
                     DriverManager.getConnection(jdbcURL, username, password);
 
-            Statement statement = connection.createStatement();
+            String sql = "update employee_payroll set salary=? where name=?";
 
-            int rowsAffected =
-                    statement.executeUpdate(
-                            "update employee_payroll set salary = 3000000 where name = 'Terisa'"
-                    );
+            PreparedStatement preparedStatement =
+                    connection.prepareStatement(sql);
 
-            System.out.println("Rows Updated: " + rowsAffected);
+            preparedStatement.setDouble(1, 3500000);
+            preparedStatement.setString(2, "Terisa");
 
-        } catch(Exception e) {
+            int rows = preparedStatement.executeUpdate();
+
+            System.out.println("Rows Updated: " + rows);
+
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
