@@ -20,17 +20,26 @@ public class EmployeePayrollService {
             Statement statement = connection.createStatement();
 
             String query =
-                    "select * from employee_payroll where start between '2018-01-01' and date(now())";
+                    "select gender, sum(salary), avg(salary), min(salary), max(salary), count(*) from employee_payroll group by gender";
 
             ResultSet resultSet = statement.executeQuery(query);
 
             while(resultSet.next()) {
 
-                int id = resultSet.getInt("id");
-                String name = resultSet.getString("name");
-                double salary = resultSet.getDouble("salary");
+                String gender = resultSet.getString(1);
+                double sum = resultSet.getDouble(2);
+                double avg = resultSet.getDouble(3);
+                double min = resultSet.getDouble(4);
+                double max = resultSet.getDouble(5);
+                int count = resultSet.getInt(6);
 
-                System.out.println(id + " " + name + " " + salary);
+                System.out.println(
+                        gender + " | SUM=" + sum +
+                                " | AVG=" + avg +
+                                " | MIN=" + min +
+                                " | MAX=" + max +
+                                " | COUNT=" + count
+                );
             }
 
         } catch(Exception e) {
