@@ -2,7 +2,8 @@ package com.java.bridgelabz;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.Statement;
 
 public class EmployeePayrollService {
 
@@ -16,19 +17,23 @@ public class EmployeePayrollService {
             Connection connection =
                     DriverManager.getConnection(jdbcURL, username, password);
 
-            String sql = "update employee_payroll set salary=? where name=?";
+            Statement statement = connection.createStatement();
 
-            PreparedStatement preparedStatement =
-                    connection.prepareStatement(sql);
+            String query =
+                    "select * from employee_payroll where start between '2018-01-01' and date(now())";
 
-            preparedStatement.setDouble(1, 3500000);
-            preparedStatement.setString(2, "Terisa");
+            ResultSet resultSet = statement.executeQuery(query);
 
-            int rows = preparedStatement.executeUpdate();
+            while(resultSet.next()) {
 
-            System.out.println("Rows Updated: " + rows);
+                int id = resultSet.getInt("id");
+                String name = resultSet.getString("name");
+                double salary = resultSet.getDouble("salary");
 
-        } catch (Exception e) {
+                System.out.println(id + " " + name + " " + salary);
+            }
+
+        } catch(Exception e) {
             e.printStackTrace();
         }
     }
