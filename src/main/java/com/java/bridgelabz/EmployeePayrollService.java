@@ -2,7 +2,8 @@ package com.java.bridgelabz;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.SQLException;
+import java.sql.ResultSet;
+import java.sql.Statement;
 
 public class EmployeePayrollService {
 
@@ -16,22 +17,25 @@ public class EmployeePayrollService {
 
             Class.forName("com.mysql.cj.jdbc.Driver");
 
-            System.out.println("Driver Loaded");
+            Connection connection =
+                    DriverManager.getConnection(jdbcURL, username, password);
 
-            Connection connection = DriverManager.getConnection(jdbcURL, username, password);
+            Statement statement = connection.createStatement();
 
-            System.out.println("Connection Established Successfully");
+            ResultSet resultSet =
+                    statement.executeQuery("select * from employee_payroll");
 
-        } catch (ClassNotFoundException e) {
+            while(resultSet.next()) {
 
-            System.out.println("Driver not found");
+                int id = resultSet.getInt("id");
+                String name = resultSet.getString("name");
+                double salary = resultSet.getDouble("salary");
 
-        } catch (SQLException e) {
+                System.out.println(id + " " + name + " " + salary);
+            }
 
-            System.out.println("Connection failed");
+        } catch(Exception e) {
             e.printStackTrace();
-
         }
-
     }
 }
